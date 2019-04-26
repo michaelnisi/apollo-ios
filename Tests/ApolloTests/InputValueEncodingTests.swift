@@ -105,9 +105,23 @@ extension InputValueEncodingTests {
     XCTAssertEqual(serializeAndDeserialize(map), ["url": "http://abc.de"])
   }
   
+  func testEncodeNonURL() {
+    XCTAssertThrowsError(try URL(jsonValue: "")) { error in
+      XCTAssert(error as! JSONDecodingError ~= JSONDecodingError
+        .couldNotConvert(value: "", to: URL.self))
+    }
+  }
+  
   func testDateTime() {
     let date = DateTime(timeIntervalSince1970: 0)
     let map: GraphQLMap = ["date": date as Optional<DateTime?>]
     XCTAssertEqual(serializeAndDeserialize(map), ["date": "1970-01-01T00:00:00Z"])
+  }
+  
+  func testEncodeNonDateTime() {
+    XCTAssertThrowsError(try DateTime(jsonValue: "hello")) { error in
+      XCTAssert(error as! JSONDecodingError ~= JSONDecodingError
+        .couldNotConvert(value: "hello", to: URL.self))
+    }
   }
 }

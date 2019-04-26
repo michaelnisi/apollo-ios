@@ -35,7 +35,7 @@ extension DateTime: JSONDecodable, JSONEncodable {
     guard #available(OSXApplicationExtension 10.12, *),
       let string = value as? String,
       let date = iso8601DateFormatter.date(from: string) else {
-      throw JSONDecodingError.couldNotConvert(value: value, to: String.self)
+      throw JSONDecodingError.couldNotConvert(value: value, to: DateTime.self)
     }
     
     self = date
