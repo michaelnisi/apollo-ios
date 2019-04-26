@@ -8,6 +8,11 @@ class InputValueEncodingTests: XCTestCase {
     let data = try! JSONSerializationFormat.serialize(value: map.withNilValuesRemoved)
     return try! JSONSerialization.jsonObject(with: data, options: []) as! NSDictionary
   }
+}
+
+// MARK: - Standard types
+
+extension InputValueEncodingTests {
   
   func testEncodeValue() {
     let map: GraphQLMap = ["name": "Luke Skywalker"]
@@ -87,5 +92,22 @@ class InputValueEncodingTests: XCTestCase {
     let review = ReviewInput(stars: 5, favoriteColor: ColorInput(red: 0, green: 0, blue: 0))
     let map: GraphQLMap = ["review": review]
     XCTAssertEqual(serializeAndDeserialize(map), ["review": ["stars": 5, "favorite_color": ["red": 0, "blue": 0, "green": 0]]])
+  }
+}
+
+// MARK: - Scalar types
+
+extension InputValueEncodingTests {
+  
+  func testEncodeURL() {
+    let url = URL(string: "http://abc.de")
+    let map: GraphQLMap = ["url": url as Optional<URL?>]
+    XCTAssertEqual(serializeAndDeserialize(map), ["url": "http://abc.de"])
+  }
+  
+  func testDateTime() {
+    let date = DateTime(timeIntervalSince1970: 0)
+    let map: GraphQLMap = ["date": date as Optional<DateTime?>]
+    XCTAssertEqual(serializeAndDeserialize(map), ["date": "1970-01-01T00:00:00Z"])
   }
 }

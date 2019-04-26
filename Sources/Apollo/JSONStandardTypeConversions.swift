@@ -136,23 +136,3 @@ extension Array: JSONEncodable {
     }
   }
 }
-
-// Example custom scalar
-
-extension URL: JSONDecodable, JSONEncodable {
-  public init(jsonValue value: JSONValue) throws {
-    guard let string = value as? String else {
-      throw JSONDecodingError.couldNotConvert(value: value, to: URL.self)
-    }
-    
-    if let url = URL(string: string) {
-        self = url
-    } else {
-        throw JSONDecodingError.couldNotConvert(value: value, to: URL.self)
-    }
-  }
-
-  public var jsonValue: JSONValue {
-    return self.absoluteString
-  }
-}
